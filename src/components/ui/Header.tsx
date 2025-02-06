@@ -7,7 +7,7 @@ export default function Header() {
 		<header className='sticky top-0 z-10 flex w-full items-center justify-between border-b-2 backdrop-blur-md'>
 			<div className='mx-auto flex max-w-3xl grow justify-between p-4'>
 				<Link className='text-2xl font-semibold' href='/'>
-					hoonie-log
+					hoonie-blog
 				</Link>
 				<nav className='flex items-center gap-4'>
 					<Link className='font-medium' href='/'>
@@ -16,8 +16,13 @@ export default function Header() {
 					<Link className='font-medium' href='/blog'>
 						blog
 					</Link>
-					<a href='https://github.com/starcradle101'>
-						<GitHubIcon />
+					<a
+						href='https://github.com/starcradle101'
+						aria-label='GitHub 프로필로 이동하기'
+						title='GitHub 프로필로 이동하기'
+					>
+						<GitHubIcon aria-hidden='true' />
+						<span className='sr-only'>GitHub</span>
 					</a>
 					<ThemeToggle />
 				</nav>
