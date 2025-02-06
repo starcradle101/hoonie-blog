@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import localFont from 'next/font/local';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import Header from '@/components/ui/Header';
@@ -10,21 +11,25 @@ const pretendard = localFont({
 	variable: '--font-pretendard',
 });
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const cookieStore = await cookies();
+	const theme = cookieStore.get('theme');
+	const initialTheme = theme?.value === 'dark' ? 'dark' : 'light';
+
 	return (
 		<html
 			lang='en'
-			className={`${pretendard.className}`}
+			className={`${pretendard.className} ${initialTheme === 'dark' ? 'dark' : ''}`}
 			suppressHydrationWarning
 		>
 			<body
 				className={`font-pretendard flex min-h-dvh flex-col bg-white text-black transition-colors duration-200 dark:bg-[#121212] dark:text-white`}
 			>
-				<ThemeProvider>
+				<ThemeProvider initialTheme={initialTheme}>
 					<Header />
 					<main className='mx-auto w-full max-w-3xl flex-grow p-4'>
 						{children}
