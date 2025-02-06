@@ -17,9 +17,7 @@ const socialLinks = [
 export default function Home() {
 	return (
 		<>
-			<h2 className='mb-8 text-2xl font-semibold md:text-3xl'>
-				🧑🏻‍💻 Hoonie Hoon
-			</h2>
+			<h2 className='mb-8 text-2xl font-semibold md:text-3xl'>Hoonie Hoon</h2>
 
 			<section className='mb-10 flex flex-wrap justify-center gap-8'>
 				<Image
@@ -50,9 +48,7 @@ export default function Home() {
 				</div>
 			</section>
 			<section className='flex flex-col'>
-				<h2 className='mb-4 text-2xl font-semibold md:text-3xl'>
-					📄 최근 포스트
-				</h2>
+				<h2 className='mb-4 text-2xl font-semibold md:text-3xl'>최근 포스트</h2>
 				<div>최근 포스트 들어갈 자리</div>
 			</section>
 		</>
