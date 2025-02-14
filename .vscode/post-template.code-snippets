@@ -1,0 +1,15 @@
+{
+	"MDX Blog Post Template": {
+		"prefix": "post-template",
+		"body": [
+			"export const metadata = {",
+			"  title: '$1',",
+			"  description: '$2',",
+			"  date: '${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}',",
+			"};",
+			"",
+			"<PostTitle {...metadata} />",
+		],
+		"description": "MDX 문서 템플릿 스니펫",
+	},
+}

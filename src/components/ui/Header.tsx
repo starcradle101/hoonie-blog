@@ -4,18 +4,17 @@ import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
 	return (
-		<header className='sticky top-0 z-10 flex w-full items-center justify-between border-b-2 backdrop-blur-md'>
-			<div className='mx-auto flex max-w-3xl grow justify-between p-4'>
-				<Link className='text-2xl font-semibold' href='/'>
-					hoonie-blog
-				</Link>
-				<nav className='flex items-center gap-4'>
-					<Link className='font-medium' href='/'>
+		<header className='w-full px-4 py-4 md:px-0'>
+			<nav className='flex items-center justify-between'>
+				<div className='flex gap-6'>
+					<Link className='font-medium hover:opacity-80' href='/'>
 						home
 					</Link>
-					<Link className='font-medium' href='/blog'>
+					<Link className='font-medium hover:opacity-80' href='/blog'>
 						blog
 					</Link>
+				</div>
+				<div className='flex items-center gap-6'>
 					<a
 						href='https://github.com/starcradle101'
 						aria-label='GitHub 프로필로 이동하기'
@@ -25,8 +24,8 @@ export default function Header() {
 						<span className='sr-only'>GitHub</span>
 					</a>
 					<ThemeToggle />
-				</nav>
-			</div>
+				</div>
+			</nav>
 		</header>
 	);
 }
