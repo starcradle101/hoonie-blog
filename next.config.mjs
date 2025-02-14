@@ -3,6 +3,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeUnwrapImages from 'rehype-unwrap-images';
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
 	/* config options here */
 	pageExtensions: ['ts', 'tsx', 'md', 'mdx'],
