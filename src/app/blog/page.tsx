@@ -1,9 +1,10 @@
+import type { Metadata } from 'next';
 import { getAllPosts } from '@/lib/posts';
 import PostList from '@/components/post/PostList';
 
-export const metadata = {
-	title: '블로그',
-	description: '기술 블로그 글 목록',
+export const metadata: Metadata = {
+	title: '기록 모음',
+	description: '후니훈의 기록 모음',
 };
 
 export default async function BlogPage() {
