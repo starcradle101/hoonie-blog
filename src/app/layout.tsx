@@ -27,13 +27,11 @@ export default async function RootLayout({
 			suppressHydrationWarning
 		>
 			<body
-				className={`font-pretendard flex min-h-dvh flex-col bg-white text-black transition-colors duration-200 dark:bg-[#121212] dark:text-white`}
+				className={`font-pretendard mx-auto flex min-h-dvh max-w-2xl flex-col bg-white text-black transition-colors duration-200 dark:bg-[#121212] dark:text-white`}
 			>
 				<ThemeProvider initialTheme={initialTheme}>
 					<Header />
-					<main className='mx-auto w-full max-w-3xl flex-grow p-4'>
-						{children}
-					</main>
+					<main className='w-full grow px-4 md:px-0'>{children}</main>
 					<Footer />
 				</ThemeProvider>
 			</body>
