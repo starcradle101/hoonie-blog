@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import { cookies } from 'next/headers';
 import localFont from 'next/font/local';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
@@ -34,6 +35,7 @@ export default async function RootLayout({
 					<main className='w-full grow px-4 md:px-0'>{children}</main>
 					<Footer />
 				</ThemeProvider>
+				<Analytics />
 			</body>
 		</html>
 	);
