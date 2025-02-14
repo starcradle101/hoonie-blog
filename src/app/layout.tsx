@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { cookies } from 'next/headers';
 import localFont from 'next/font/local';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
@@ -36,6 +37,7 @@ export default async function RootLayout({
 					<Footer />
 				</ThemeProvider>
 				<Analytics />
+				<SpeedInsights />
 			</body>
 		</html>
 	);
