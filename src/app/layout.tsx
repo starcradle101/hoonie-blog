@@ -28,7 +28,7 @@ export default async function RootLayout({
 			suppressHydrationWarning
 		>
 			<body
-				className={`mx-auto flex min-h-dvh max-w-2xl flex-col bg-white text-black transition-colors duration-200 dark:bg-[#121212] dark:text-white`}
+				className={`mx-auto flex min-h-dvh max-w-2xl flex-col bg-white text-[#212529] transition-colors duration-200 dark:bg-[#121212] dark:text-[#ECECEC]`}
 			>
 				<ThemeProvider initialTheme={initialTheme}>
 					<Header />

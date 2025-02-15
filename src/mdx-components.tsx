@@ -7,7 +7,7 @@ import { highlight } from 'sugar-high';
 export function useMDXComponents(components: MDXComponents): MDXComponents {
 	return {
 		wrapper: ({ children }) => (
-			<section className='prose prose-sm md:prose-base dark:prose-invert max-w-none break-keep'>
+			<section className='prose prose-base md:prose-lg dark:prose-invert max-w-none break-keep'>
 				{children}
 			</section>
 		),

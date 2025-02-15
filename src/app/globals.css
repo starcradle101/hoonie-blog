@@ -41,6 +41,10 @@ html {
 	@apply mt-0 mb-4 text-base text-gray-500 dark:text-gray-400;
 }
 
+.prose p {
+	@apply text-[#212529] dark:text-[#ECECEC];
+}
+
 .prose pre {
 	@apply overflow-x-auto rounded-lg border border-neutral-900 bg-neutral-800 px-3 py-2 text-sm md:text-base;
 }
