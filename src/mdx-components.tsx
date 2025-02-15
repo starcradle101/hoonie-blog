@@ -25,7 +25,6 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 					alt={props.alt || ''}
 					width={600}
 					height={600}
-					quality={75}
 					loading='lazy'
 					style={{ width: '100%', height: 'auto' }}
 				/>
