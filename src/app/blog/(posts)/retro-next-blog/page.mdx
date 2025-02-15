@@ -1,0 +1,315 @@
+export const metadata = {
+	title: 'hoonie-blog: 블로그는 제발 사드세요',
+	description: 'Next.js로 mdx 기반의 블로그 만들기 회고',
+	date: '2025-02-15',
+};
+
+<PostTitle {...metadata} />
+
+## 목차
+
+1. [TL;DR](#tl-dr)
+2. [블로그 유목민의 자기소개](#블로그-유목민의-자기소개)
+3. [기술 스택과 폴더 구조](#기술-스택과-폴더-구조)
+4. [톺아보는 hoonie-blog](#톺아보는-hoonie-blog)
+5. [좌충우돌 트러블슈팅: 다크모드 구현하기](#좌충우돌-트러블슈팅-다크모드-구현하기)
+6. [이제 SEO를 고려할 차례](#이제-seo를-고려할-차례)
+7. [블로그는 제발 사 드세요, 하지만…](#블로그는-제발-사-드세요-하지만)
+
+## TL;DR
+
+> Next.js와 MDX를 활용하여 의존성을 최소화하고, 글쓰기 경험을 해치지 않는 미니멀한 블로그를 만들기 위한 여정에서 얻은 것들을 알아봅시다.
+
+## 블로그 유목민의 자기소개
+
+처음에는 벨로그, 그다음에는 노션 기반의 개인 블로그 템플릿, 그리고 이후에는 직접 만든 Supabase 기반 블로그까지—저는 블로그 플랫폼을 끊임없이 옮겨 다니는 유목민이었습니다.
+
+기존의 서비스를 사용하는 대신 직접 만든 블로그를 운영한다는 점이 언제나 매력적으로 다가왔고, 그 결과 이곳저곳을 기웃거리며 더 나은 블로그 서비스를 찾아 헤맸습니다. 결국 Supabase를 활용해 블로그를 직접 만들었지만, 시간이 지나면서 점점 방치하게 되었습니다. 사용 경험이 만족스럽지 않았고, 자연스럽게 글을 쓰고자 하는 동기도 줄어들었기 때문입니다.
+
+BaaS와 다양한 라이브러리를 활용해 직접 구축한 점은 흥미로웠지만, 지나치게 많은 의존성 덕분에 지속적인 관리가 어렵다는 문제가 있었습니다. 만약 사용한 라이브러리 중 하나라도 지원이 중단된다면, 블로그를 유지보수하는 데 또 많은 시간을 들여야 했습니다. 결국 오랜만에 블로그를 다시 살펴보다가 화면 가득한 의존성 업데이트 목록을 보고는 결론을 내렸습니다.
+
+> 새로운 블로그를 만드는 게 더 빠르겠다.
+
+## 기술 스택과 폴더 구조
+
+블로그를 구현하기 전에, 이전과 같은 실수를 반복하지 않기 위해서 두 가지의 대원칙을 세웠습니다:
+
+1. **불필요한 의존성**을 줄일 것
+2. 글쓰기 경험을 해치지 않는 **미니멀한 블로그**를 만들 것
+
+이 두 가지 원칙을 바탕으로 Next.js와 MDX를 활용한 블로그 구현을 하기로 결정했습니다.
+
+### Next.js를 선택한 이유
+
+블로그 개발에 너무 많은 시간을 들이기보다는, 정해진 방식대로 개발할 수 있는 프레임워크를 선택하는 것이 더 효율적이라고 판단했습니다. 다행히 [공식문서](https://nextjs.org/docs/pages/building-your-application/configuring/mdx)에서 확인할 수 있듯이, Next.js는 **자체적으로 MDX를 지원**하고 있습니다.
+
+- 정적 사이트 생성(SSG)과 서버 사이드 렌더링(SSR)지원
+- 폴더 기반 라우팅
+
+### MDX를 선택한 이유
+
+블로그의 핵심은 결국 글쓰기 경험이라고 생각합니다. MDX를 사용하면 마크다운의 간결함과 JSX의 확장성을 동시에 활용할 수 있어서, 단순한 글 작성 뿐만 아니라 컴포넌트와 같은 요소도 쉽게 추가할 수 있습니다.
+
+- Markdown의 간결함
+- JSX와의 결합
+- 불필요한 데이터베이스 제거
+
+잠시 뒤에 설명하겠지만, MDX를 사용하면 아래와 같이 파일 내부에 컴포넌트를 쉽게 삽입할 수 있습니다. 또한 Supabase와 같은 데이터베이스를 따로 사용하지 않아도 되었기에, 블로그의 유지보수가 훨씬 더 간편해졌습니다.
+
+```mdx
+export const metadata = {
+	title: 'Next.js로 블로그 만들기',
+	description:
+		'Next.js와 MDX를 사용하여 개인 블로그를 만드는 과정을 공유합니다.',
+	date: '2025-02-07',
+};
+
+<PostTitle {...metadata} />
+
+## 그리고 이렇게 마크다운 문법을 그대로 사용할 수 있습니다!
+```
+
+결론적으로, Next.js와 MDX의 조합을 통해 최소한의 설정으로도 깔끔한 블로그를 만들 수 있기에 이러한 조합을 선택했습니다.
+
+### 폴더 구조
+
+```markdown
+hoonie-blog
+├─ public/
+├─ src/
+│ ├─ app/
+│ │ ├─ blog/
+│ │ ├─ layout.tsx
+│ │ ├─ sitemap.ts
+│ │ ├─ robots.ts
+│ ├─ components/
+│ │ ├─ post/
+│ │ └─ ui/
+│ ├─ fonts/
+│ ├─ lib/
+│ ├─ types/
+└─ 기타 프로젝트 설정 파일 (Prettier, ESLint, Next.js 등)
+```
+
+구조적으로 크게 복잡한 부분은 없으며, 블로그 글은 `/app/blog/` 내부에서 MDX 파일로 관리하는 방식을 선택했습니다.
+
+## 톺아보는 hoonie-blog
+
+### MDX의 스타일과 컴포넌트 적용
+
+Next.js는 `@next/mdx`패키지를 사용하여 MDX를 처리합니다. 이 과정에서 **remark**와 **rehype**라는 두 가지 주요 라이브러리를 활용하는데, 이 둘은 [Markdown을 HTML로 변환](https://www.daleseo.com/unified-remark-rehype/)하는 데 핵심적인 역할을 합니다. Next.js에서는 `next.config.mjs`에서 remark/rehype 플러그인을 설정할 수 있으며, 저는 GitHub Markdown을 지원하는 [remark-gfm](https://github.com/remarkjs/remark-gfm)을 사용했습니다.
+
+또한 Next.js에서 MDX 렌더링을 커스터마이징하기 위해서, `@next/mdx`는 mdx-components라는 특수한 컴포넌트를 사용합니다. 기본적인 wrapper와 함께, [sugar-high](https://www.npmjs.com/package/sugar-high) 라이브러리를 사용해 코드 블럭에 문법 강조를 적용했습니다. 이제 MDX에서 작성한 콘텐츠는 자동으로 스타일이 적용된 HTML로 렌더링됩니다.
+
+```tsx
+// ...import
+
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+	return {
+		wrapper: ({ children }) => (
+			<section className='prose prose-sm md:prose-base dark:prose-invert max-w-none break-keep'>
+				{children}
+			</section>
+		),
+		code: ({ children, className, ...props }) => {
+			if (typeof children === 'string' && !className) {
+				return <code {...props}>{children}</code>;
+			}
+			const codeHTML = highlight(children as string);
+			return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
+		},
+		img: (props) => {
+			return (
+				<Image
+					src={`/images/posts/${props.src}`}
+					alt={props.alt || ''}
+					width={600}
+					height={600}
+					quality={75}
+					loading='lazy'
+					style={{ width: '100%', height: 'auto' }}
+				/>
+			);
+		},
+		a: ({ href = '', ...props }) => (
+			<Link href={href} target='blank' {...props} />
+		),
+		PostTitle,
+		...components,
+	};
+}
+```
+
+### 게시글 불러오기 - MDX 파일에서 메타데이터 추출하기
+
+블로그 게시글을 불러올 때에는 Node의 fs(파일 시스템) 모듈을 사용했습니다.
+이 방법을 사용하면 각 MDX 파일의 메타데이터(제목, 날짜 등)를 쉽게 추출할 수 있으며, 블로그 글 목록 페이지에 사용할 데이터를 간편하게 추출할 수 있습니다.
+
+```ts
+// ...import
+
+export async function getAllPosts(): Promise<Post[]> {
+	const dirs = fs
+		.readdirSync(POSTS_DIR, { withFileTypes: true })
+		.filter((dirent) => dirent.isDirectory())
+		.map((dirent) => dirent.name);
+
+	const posts = await Promise.all(
+		dirs.map(async (dir) => {
+			const { metadata } = await import(`@/app/blog/(posts)/${dir}/page.mdx`);
+			return {
+				...metadata,
+				slug: dir,
+				date: new Date(metadata.date).toISOString().split('T')[0],
+			};
+		}),
+	);
+
+	return posts.sort(
+		(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+	);
+}
+```
+
+처음에는 MDX 기반으로 블로그를 구현하는 것이 매우 간단해 보였습니다.
+단순히 MDX 파일을 렌더링하고, 메타데이터를 추출하여 정렬하면 끝이었으니까요. 하지만 문제는 예상하지 못한 곳에서 발생했습니다.
+
+## 좌충우돌 트러블슈팅: 다크모드 구현하기
+
+대부분의 웹사이트에서 다크모드를 지원하는 요즘, 제 블로그에도 그러한 기능을 빼 놓을 수는 없었습니다. 해당 기능을 지원하는 브라우저도 많고, 사용자의 선호도도 점차 증가하는 추세이기 때문입니다. 하지만 해당 기능을 구현하면서 예상하지 못한 문제가 발생했습니다. 바로 **FOUC(Flash of Unstyled Content)** 문제였습니다.
+
+### 다크모드에서 발생한 FOUC 문제
+
+최초로 시도한 다크모드 구현 방식은 **로컬 스토리지와 `useEffect`를 활용**하여,
+브라우저에 저장된 다크모드 설정을 불러오는 것이었습니다.
+
+그러나 Next.js에서는 초기 HTML을 **서버에서 렌더링(SSR)** 하고,
+이를 클라이언트가 전달받아 **하이드레이션** 을 수행하는 구조이기 때문에,
+**웹 페이지가 로드될 때 스타일이 적용되기 전의 기본 스타일이 잠시 보이는 FOUC 현상이 발생**할 수밖에 없었습니다. 인라인 스크립트를 사용해 문제를 해결할 수도 있었지만, 보안 문제나 가독성 저하 등의 한계가 명확했습니다.
+
+### 쿠키 한 입에 문제 해결!
+
+해당 문제에 대해 지인에게 의견을 구했고, 로컬 스토리지를 사용하는 대신 [쿠키를 활용해 보는 것](https://nextjs.org/docs/app/api-reference/functions/cookies)이 어떻겠냐는 조언을 얻었습니다. 쿠키를 활용하면 서버에서 초기 상태를 결정할 수 있어서, 하이드레이션을 거치기 전에 테마를 적용할 수 있기 때문입니다. 즉, **SSR 과정에서 쿠키를 읽어, HTML이 브라우저에 도착하기 전에 다크모드가 적용된 상태로 렌더링할 수 있다는 것**이었습니다.
+
+```tsx
+export default async function RootLayout({
+	children,
+}: Readonly<{ children: React.ReactNode }>) {
+	// 쿠키 값을 기반으로 테마 결정하기
+	const cookieStore = await cookies();
+	const theme = cookieStore.get('theme');
+	const initialTheme = theme?.value === 'dark' ? 'dark' : 'light';
+
+	// ...
+}
+```
+
+이렇게 쿠키 값을 기반으로 렌더링 시 다크모드가 적용된 HTML을 가져오기 때문에, 브라우저가 페이지를 로드할 때 FOUC 문제가 더 이상 발생하지 않았습니다. 또한 사용자가 버튼을 통해 테마를 토글할 경우에도 쿠키를 기반으로 적용되도록 했습니다.
+
+```ts
+const toggleTheme = () => {
+	const newTheme = theme === 'light' ? 'dark' : 'light';
+	setTheme(newTheme);
+	document.cookie = `theme=${newTheme}; path=/`;
+	document.documentElement.classList.toggle('dark');
+};
+```
+
+## 이제 SEO를 고려할 차례
+
+블로그를 운영하면서 검색 유입을 늘리는 것은 중요한 목표 중 하나였습니다. 그래서 Next.js 블로그에 SEO 최적화를 적용하는 방법을 고민했고, 다양한 전략을 시도해 보았습니다.
+
+### Sitemap(사이트맵) 생성하기
+
+검색 엔진이 사이트의 구조를 쉽게 파악할 수 있도록 사이트맵을 추가했습니다. 이를 위해 sitemap.ts 파일을 생성하여 자동으로 Sitemap을 동적으로 생성하도록 설정했습니다. 이전에 만든 `getAllPosts()` 함수를 활용해, 블로그 게시글 목록을 가져와 사이트맵에 포함시켰습니다.
+
+제 블로그의 게시글은 next/mdx 기반으로 작성되며, 새로운 게시글이 추가될 때마다 다시 빌드하고 배포하는 방식으로 운영됩니다. 따라서 동적 API 방식 대신, 빌드 시 자동으로 Sitemap을 생성하는 방식을 선택했습니다. 이 방식 덕분에 추가적인 API 호출 없이도 SEO 최적화가 가능해졌습니다.
+
+```ts
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+	const posts = await getAllPosts();
+
+	const blogPosts = posts.map((post) => ({
+		url: `https://hoonie-blog.vercel.app/blog/${post.slug}`,
+		lastModified: post.date,
+		changeFrequency: 'weekly' as const,
+		priority: 0.6,
+	}));
+
+	return [
+		{
+			url: 'https://hoonie-blog.vercel.app',
+			lastModified: new Date(),
+			// 검색 엔진이 페이지 변경 주기를 파악할 수 있도록 changeFrequency 설정
+			changeFrequency: 'daily' as const,
+			priority: 1.0,
+		},
+		{
+			url: 'https://hoonie-blog.vercel.app/blog',
+			lastModified: new Date(),
+			changeFrequency: 'weekly' as const,
+			// 검색 엔진이 페이지의 상대적 중요도를 판단할 수 있도록 priority 설정
+			priority: 0.8,
+		},
+		...blogPosts,
+	];
+}
+```
+
+### robots.txt 생성하기
+
+**robots.txt**는 검색 엔진 크롤러(예: Googlebot, Bingbot 등)에게 웹사이트 접근 가능 여부를 안내하는 역할을 하는 파일입니다. Next.js에서는 robots.txt를 동적으로 생성할 수 있도록 robots.ts 파일을 설정할 수 있습니다.
+
+```ts
+import { BASE_URL } from './sitemap';
+import type { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+	return {
+		rules: {
+			userAgent: '*',
+			allow: '/',
+		},
+		sitemap: `${BASE_URL}/sitemap.xml`,
+	};
+}
+```
+
+제 블로그에는 따로 어드민 페이지가 존재하지 않기 때문에, 굳이 비공개 및 관리 페이지 차단을 위한 `disallow` 속성을 사용하지는 않았습니다. 또한 `sitemap` 속성을 추가해 자동으로 생성된 sitemap을 robots.ts 파일에 명시해 검색 엔진이 이를 쉽게 찾도록 유도했습니다.
+
+### Vercel Web Analytics와 Speed Insights
+
+추가적으로 블로그의 방문자 데이터와 속도 측정을 위해서, Vercel에서 제공하는 Web Analytics와 Speed Insights를 추가했습니다.
+
+Vercel Web Analytics는 웹사이트 방문자 데이터를 실시간으로 분석하는 도구로, 이를 통해 어떤 경로로 방문자가 유입되었는지, 어떤 페이지가 인기 있는지, 트래픽이 어떤 패턴을 보이는지 등을 파악할 수 있습니다. Speed Insights는 실제 사용자 데이터를 기반으로 사이트 성능을 분석하는 도구입니다.
+
+![Vercel Web Analytics](retro-next-blog/vercel-seo.webp)
+
+## 블로그는 제발 사 드세요, 하지만…
+
+Next.js로 블로그를 만들면서 느낀 점을 한마디로 정리하자면, 제목처럼 “블로그는 제발 사 드세요.”였습니다. 처음에는 단순히 MDX를 변환해 페이지에 렌더링하기만 하면 되는 작업이라고 생각했습니다. 하지만 SEO 최적화, 다크모드 FOUC 문제 해결, 사이트맵 설정, 성능 개선 등 다양한 요소들을 고려하며 시행착오를 겪어야 했습니다. 아직 미흡한 부분도 여전히 많다고 느껴집니다.
+
+그럼에도 불구하고, 직접 블로그를 만드는 것은 가치 있는 경험이었습니다.
+
+### 나만의 블로그를 만든다는 것의 의미
+
+이미 수많은 블로그 플랫폼이 존재하고, 기본적으로 제공되는 기능들만 활용해도 충분히 좋은 블로그를 운영할 수 있습니다. 하지만 직접 만든 블로그에는 ‘나만의 색깔’을 담을 수 있습니다.
+
+- 내가 원하는 방식으로 디자인을 커스터마이징할 수 있고,
+- SEO, 페이지 속도, 데이터 구조 등을 내가 직접 최적화할 수 있으며,
+- 새로운 기능을 추가하면서 개발자로서 성장할 수도 있습니다.
+
+단순히 글을 작성하는 공간이 아니라, 내가 원하는 방식으로 발전시킬 수 있는 무한한 가능성을 가진 플랫폼이 된다는 뜻이기도 합니다.
+
+### 앞으로의 개선 계획
+
+지금의 블로그는 기본적인 기능만 갖춘 상태여서, 앞으로 더 많은 기능을 추가하면서 지속적으로 발전시켜 나아갈 예정입니다. 현재 우선순위에 둔 기능은 다음과 같습니다.
+
+- 게시글 목록 페이지네이션 추가
+- 태그 및 검색 기능 도입
+
+이외에도 다양한 피드백을 기반으로 조금씩 블로그를 개선해 나아 갈 계획입니다.
+
+다른 모든 서비스나 프로젝트가 그렇겠지만, 특히 블로그는 한 번 만들고 끝나는 것이 아니라, 계속해서 개선해 나아가는 프로젝트라고 생각합니다. 앞으로도 꾸준히 블로그를 발전시키면서, 더 좋은 글과 더 나은 사용자 경험을 제공할 수 있도록 노력하고자 합니다.
+
+> 블로그는 사 드시는 게 편합니다. 하지만, 그럼에도 불구하고 직접 만드는 경험은 가치가 있습니다.
