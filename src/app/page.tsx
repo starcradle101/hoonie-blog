@@ -32,7 +32,8 @@ export default async function Home() {
 			<section className='mb-8'>
 				<h1 className='mb-4 text-3xl font-bold md:text-4xl'>hoonie-blog</h1>
 				<p className='text-lg'>
-					기록하는 개발자 <strong>후니훈</strong>입니다
+					기록하는 개발자 <strong className='font-semibold'>후니훈</strong>
+					입니다
 				</p>
 			</section>
 

@@ -50,7 +50,7 @@ html {
 }
 
 .prose :not(pre) > code {
-	@apply rounded-sm bg-neutral-100 text-black;
+	@apply rounded-sm bg-neutral-100 font-medium text-black;
 }
 
 .prose pre code {
@@ -80,6 +80,11 @@ ol {
 
 .prose li {
 	@apply my-2 pl-0;
+}
+
+.prose blockquote p::before,
+p::after {
+	@apply content-none;
 }
 
 /* Scrollbar custom */

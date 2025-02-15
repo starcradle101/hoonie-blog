@@ -10,7 +10,6 @@ import './globals.css';
 const pretendard = localFont({
 	src: '../fonts/PretendardVariable.woff2',
 	display: 'swap',
-	variable: '--font-pretendard',
 });
 
 export default async function RootLayout({
