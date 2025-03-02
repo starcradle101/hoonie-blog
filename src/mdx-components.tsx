@@ -30,9 +30,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 				/>
 			);
 		},
-		a: ({ href = '', ...props }) => (
-			<Link href={href} target='blank' {...props} />
-		),
+		a: ({ href = '', ...props }) => <Link href={href} {...props} />,
 		PostTitle,
 		...components,
 	};
