@@ -8,7 +8,7 @@ export const metadata = {
 
 ## 목차
 
-1. [TL;DR](#tl-dr)
+1. [TL;DR](#tldr)
 2. [블로그 유목민의 자기소개](#블로그-유목민의-자기소개)
 3. [기술 스택과 폴더 구조](#기술-스택과-폴더-구조)
 4. [톺아보는 hoonie-blog](#톺아보는-hoonie-blog)
@@ -145,9 +145,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 블로그 게시글을 불러올 때에는 Node의 fs(파일 시스템) 모듈을 사용했습니다.
 이 방법을 사용하면 각 MDX 파일의 메타데이터(제목, 날짜 등)를 쉽게 추출할 수 있으며, 블로그 글 목록 페이지에 사용할 데이터를 간편하게 추출할 수 있습니다.
 
-```ts
-// ...import
-
+```typescript
 export async function getAllPosts(): Promise<Post[]> {
 	const dirs = fs
 		.readdirSync(POSTS_DIR, { withFileTypes: true })
@@ -206,7 +204,7 @@ export default async function RootLayout({
 
 이렇게 쿠키 값을 기반으로 렌더링 시 다크모드가 적용된 HTML을 가져오기 때문에, 브라우저가 페이지를 로드할 때 FOUC 문제가 더 이상 발생하지 않았습니다. 또한 사용자가 버튼을 통해 테마를 토글할 경우에도 쿠키를 기반으로 적용되도록 했습니다.
 
-```ts
+```typescript
 const toggleTheme = () => {
 	const newTheme = theme === 'light' ? 'dark' : 'light';
 	setTheme(newTheme);
