@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 	title: 'hoonie-blog',
 	description: '코드 너머를 바라보는 후니훈의 블로그',
 	verification: {
-		google: 'ivmj6yMqlNQnmjBL2VFZAYzCUZ4hufTLOBeeIb-xOKw',
+		google: 'hE6ljPDz_HkblzT3uh9NlwS0VuRTzedUsLg8kKSbaMQ',
 	},
 };
 
