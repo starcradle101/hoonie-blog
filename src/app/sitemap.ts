@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { getAllPosts } from '@/lib/posts';
 
-export const BASE_URL = 'https://hoonie-blog.vercel.app';
+export const BASE_URL = 'https://hoonieblog.xyz';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const posts = await getAllPosts();
