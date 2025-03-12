@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { cookies } from 'next/headers';
@@ -6,6 +7,11 @@ import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import Header from '@/components/ui/Header';
 import Footer from '@/components/ui/Footer';
 import './globals.css';
+
+export const metadata: Metadata = {
+	title: 'hoonie-blog',
+	description: '코드 너머를 바라보는 후니훈의 블로그',
+};
 
 const pretendard = localFont({
 	src: '../fonts/PretendardVariable.woff2',

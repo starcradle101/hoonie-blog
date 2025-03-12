@@ -1,15 +1,6 @@
-import type { Metadata } from 'next';
 import { GitHubIcon, MailIcon } from '@/components/ui/icons';
 import { getRecentPosts } from '@/lib/posts';
 import PostList from '@/components/post/PostList';
-
-export const metadata: Metadata = {
-	title: 'hoonie-blog',
-	description: '코드 너머를 바라보는 후니훈의 블로그',
-	verification: {
-		google: 'hE6ljPDz_HkblzT3uh9NlwS0VuRTzedUsLg8kKSbaMQ',
-	},
-};
 
 const socialLinks = [
 	{
