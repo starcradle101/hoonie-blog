@@ -7,15 +7,10 @@ import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import Header from '@/components/ui/Header';
 import Footer from '@/components/ui/Footer';
 import './globals.css';
-import { BASE_URL } from './sitemap';
 
 export const metadata: Metadata = {
 	title: 'hoonie-blog',
 	description: '코드 너머를 바라보는 후니훈의 블로그',
-	metadataBase: new URL(BASE_URL),
-	alternates: {
-		canonical: '/',
-	},
 };
 
 const pretendard = localFont({
