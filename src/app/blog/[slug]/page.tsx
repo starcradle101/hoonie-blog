@@ -1,6 +1,7 @@
 import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { BASE_URL } from '@/app/sitemap';
 
 interface PostPageProps {
 	params: Promise<{
@@ -28,11 +29,15 @@ export async function generateMetadata({
 	return {
 		title,
 		description,
+		alternates: {
+			canonical: `/blog/${slug}`,
+		},
 		openGraph: {
 			title,
 			description,
 			type: 'article',
 			publishedTime: date,
+			url: `${BASE_URL}/blog/${slug}`,
 		},
 	};
 }

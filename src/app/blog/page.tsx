@@ -5,6 +5,9 @@ import PostList from '@/components/post/PostList';
 export const metadata: Metadata = {
 	title: '기록 모음',
 	description: '후니훈의 기록 모음',
+	alternates: {
+		canonical: '/blog',
+	},
 };
 
 export default async function BlogPage() {
