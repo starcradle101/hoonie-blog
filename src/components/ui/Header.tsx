@@ -20,7 +20,7 @@ export default function Header() {
 						aria-label='GitHub 프로필로 이동하기'
 						title='GitHub 프로필로 이동하기'
 					>
-						<GitHubIcon aria-hidden='true' />
+						<GitHubIcon />
 						<span className='sr-only'>GitHub</span>
 					</a>
 					<ThemeToggle />

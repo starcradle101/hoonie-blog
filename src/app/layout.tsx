@@ -40,7 +40,9 @@ export default async function RootLayout({
 			>
 				<ThemeProvider initialTheme={initialTheme}>
 					<Header />
-					<main className='w-full grow px-4 md:px-0'>{children}</main>
+					<main className='w-full grow px-4 md:px-0' role='main'>
+						{children}
+					</main>
 					<Footer />
 				</ThemeProvider>
 				<Analytics />
