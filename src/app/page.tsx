@@ -1,6 +1,13 @@
+import { Metadata } from 'next';
 import { GitHubIcon, MailIcon } from '@/components/ui/icons';
 import { getRecentPosts } from '@/lib/posts';
 import PostList from '@/components/post/PostList';
+
+export const metadata: Metadata = {
+	alternates: {
+		canonical: '/',
+	},
+};
 
 const socialLinks = [
 	{

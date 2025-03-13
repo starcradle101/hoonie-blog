@@ -19,9 +19,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 			return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
 		},
 		img: (props) => {
+			const src = props.src.includes('/')
+				? `/images/posts/${props.src}`
+				: `/images/posts/${props.src}`;
+
 			return (
 				<Image
-					src={`/images/posts/${props.src}`}
+					src={src}
 					alt={props.alt || ''}
 					width={600}
 					height={600}
@@ -30,7 +34,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 				/>
 			);
 		},
-		a: ({ href = '', ...props }) => <Link href={href} {...props} />,
+		a: ({ href = '', ...props }) => (
+			<Link
+				href={href}
+				target={href.startsWith('http') ? '_blank' : undefined}
+				{...props}
+			/>
+		),
 		PostTitle,
 		...components,
 	};
