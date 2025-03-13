@@ -1,0 +1,85 @@
+name: Update Changelog
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  update-changelog:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get PR information
+        id: pr-info
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const title = pr.title;
+            const number = pr.number;
+            const url = pr.html_url;
+            const body = pr.body || '';
+            const merged_at = pr.merged_at;
+            const date = new Date(merged_at).toISOString().split('T')[0];
+            const labels = pr.labels.map(label => label.name);
+
+            let category = 'Other';
+            if (labels.includes('feature')) category = 'Added';
+            else if (labels.includes('bug')) category = 'Fixed';
+            else if (labels.includes('documentation')) category = 'Documentation';
+            else if (labels.includes('refactor')) category = 'Changed';
+            else if (labels.includes('chore')) category = 'Maintenance';
+
+            return {
+              title,
+              number,
+              url,
+              body,
+              date,
+              category
+            };
+
+      - name: Update Changelog
+        run: |
+          PR_TITLE="${{ fromJSON(steps.pr-info.outputs.result).title }}"
+          PR_NUMBER="${{ fromJSON(steps.pr-info.outputs.result).number }}"
+          PR_URL="${{ fromJSON(steps.pr-info.outputs.result).url }}"
+          PR_DATE="${{ fromJSON(steps.pr-info.outputs.result).date }}"
+          PR_CATEGORY="${{ fromJSON(steps.pr-info.outputs.result).category }}"
+
+          # Extract and search for the [Unreleased] section
+          UNRELEASED_LINE=$(grep -n "\[Unreleased\]" CHANGELOG.md | head -n 1 | cut -d : -f 1)
+          NEXT_LINE=$((UNRELEASED_LINE + 1))
+
+          # Check if the category already exists in the Unreleased section
+          CATEGORY_EXISTS=$(sed -n "$NEXT_LINE,/^## /p" CHANGELOG.md | grep -c "### $PR_CATEGORY")
+
+          if [ "$CATEGORY_EXISTS" -eq 0 ]; then
+            # Category doesn't exist, add it
+            sed -i "$NEXT_LINE i\\\n### $PR_CATEGORY" CHANGELOG.md
+            NEXT_LINE=$((NEXT_LINE + 1))
+          else
+            # Find the line where the category exists
+            CATEGORY_LINE=$(sed -n "$NEXT_LINE,/^## /p" CHANGELOG.md | grep -n "### $PR_CATEGORY" | head -n 1 | cut -d : -f 1)
+            NEXT_LINE=$((UNRELEASED_LINE + CATEGORY_LINE))
+          fi
+
+          # Add the PR entry
+          sed -i "$NEXT_LINE a\\- [$PR_TITLE]($PR_URL) (#$PR_NUMBER) - $PR_DATE" CHANGELOG.md
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'docs: update changelog for PR #${{ fromJSON(steps.pr-info.outputs.result).number }}'
+          file_pattern: CHANGELOG.md

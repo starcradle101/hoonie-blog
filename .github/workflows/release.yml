@@ -1,0 +1,118 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+      release_notes:
+        description: 'Additional release notes'
+        required: false
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update Changelog for release
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          DATE=$(date +%Y-%m-%d)
+
+          # Find the Unreleased section
+          UNRELEASED_LINE=$(grep -n "\[Unreleased\]" CHANGELOG.md | head -n 1 | cut -d : -f 1)
+
+          # Insert new release header after Unreleased
+          sed -i "${UNRELEASED_LINE}a\\\\n## [$VERSION] - $DATE" CHANGELOG.md
+
+          # Add additional release notes if provided
+          if [ ! -z "${{ github.event.inputs.release_notes }}" ]; then
+            RELEASE_LINE=$((UNRELEASED_LINE + 1))
+            sed -i "${RELEASE_LINE}a\\\\n${{ github.event.inputs.release_notes }}" CHANGELOG.md
+          fi
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'chore: prepare release v${{ github.event.inputs.version }}'
+          file_pattern: CHANGELOG.md
+
+      - name: Create Release Tag
+        id: create_tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const version = 'v${{ github.event.inputs.version }}';
+            const ref = `refs/tags/${version}`;
+            const sha = context.sha;
+
+            try {
+              await github.rest.git.createRef({
+                owner,
+                repo,
+                ref,
+                sha
+              });
+              console.log(`Tag ${version} created`);
+              return version;
+            } catch (error) {
+              core.setFailed(`Failed to create tag: ${error.message}`);
+            }
+
+      - name: Create GitHub Release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const version = 'v${{ github.event.inputs.version }}';
+
+            // Read the changelog to extract the release notes
+            const changelog = fs.readFileSync('CHANGELOG.md', 'utf8');
+            const releaseHeader = `## [${version.substring(1)}]`;
+            const nextReleaseHeaderRegex = /## \[\d+\.\d+\.\d+\]/;
+
+            let releaseNotes = '';
+            let captureMode = false;
+
+            for (const line of changelog.split('\n')) {
+              if (line.startsWith(releaseHeader)) {
+                captureMode = true;
+                continue;
+              }
+
+              if (captureMode && nextReleaseHeaderRegex.test(line)) {
+                break;
+              }
+
+              if (captureMode) {
+                releaseNotes += line + '\n';
+              }
+            }
+
+            // Trim any extra newlines
+            releaseNotes = releaseNotes.trim();
+
+            // Create the release
+            try {
+              const { owner, repo } = context.repo;
+              const release = await github.rest.repos.createRelease({
+                owner,
+                repo,
+                tag_name: version,
+                name: version,
+                body: releaseNotes,
+                draft: false,
+                prerelease: false
+              });
+
+              console.log(`Release ${version} created: ${release.data.html_url}`);
+            } catch (error) {
+              core.setFailed(`Failed to create release: ${error.message}`);
+            }
