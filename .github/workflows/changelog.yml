@@ -58,6 +58,9 @@ jobs:
           PR_DATE="${{ fromJSON(steps.pr-info.outputs.result).date }}"
           PR_CATEGORY="${{ fromJSON(steps.pr-info.outputs.result).category }}"
 
+          # Escape special characters in PR_TITLE for sed
+          PR_TITLE_ESCAPED=$(printf '%s\n' "$PR_TITLE" | sed -e 's/[\/&]/\\&/g')
+
           # Extract and search for the [Unreleased] section
           UNRELEASED_LINE=$(grep -n "\[Unreleased\]" CHANGELOG.md | head -n 1 | cut -d : -f 1)
           NEXT_LINE=$((UNRELEASED_LINE + 1))
@@ -67,7 +70,7 @@ jobs:
 
           if [ "$CATEGORY_EXISTS" -eq 0 ]; then
             # Category doesn't exist, add it
-            sed -i "$NEXT_LINE i\\\n### $PR_CATEGORY" CHANGELOG.md
+            sed -i "${NEXT_LINE}i\n### $PR_CATEGORY" CHANGELOG.md
             NEXT_LINE=$((NEXT_LINE + 1))
           else
             # Find the line where the category exists
@@ -75,8 +78,8 @@ jobs:
             NEXT_LINE=$((UNRELEASED_LINE + CATEGORY_LINE))
           fi
 
-          # Add the PR entry
-          sed -i "$NEXT_LINE a\\- [$PR_TITLE]($PR_URL) (#$PR_NUMBER) - $PR_DATE" CHANGELOG.md
+          # Add the PR entry with escaped title
+          sed -i "${NEXT_LINE}a\- [$PR_TITLE_ESCAPED]($PR_URL) (#$PR_NUMBER) - $PR_DATE" CHANGELOG.md
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
