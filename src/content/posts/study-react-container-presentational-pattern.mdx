@@ -6,6 +6,15 @@ export const metadata = {
 
 <PostTitle {...metadata} />
 
+## 목차
+
+- [들어가면서](#들어가면서)
+- [Container/Presentational 패턴이란?](#containerpresentational-패턴이란)
+- [Presentational 컴포넌트](#presentational-컴포넌트)
+- [Container 컴포넌트](#container-컴포넌트)
+- [Hooks 시대의 Container/Presentational 패턴](#hooks-시대의-containerpresentational-패턴)
+- [토마토들에서 사용했던 패턴은 Container/Presentational 패턴인가?](#토마토들에서-사용했던-패턴은-containerpresentational-패턴인가)
+
 ## 들어가면서
 
 토마토들 회고를 진행하면서 [폴더 구조](https://hoonieblog.xyz/blog/retro-tomatoes#%ED%8F%B4%EB%8D%94-%EA%B5%AC%EC%A1%B0)에 대한 이야기를 한 적이 있습니다. 당시 프로젝트에서는 UI와 로직을 분리하기 위해 컴포넌트를 어떻게 구조화할지 고민했었고, 블로그 글을 참고해서 **컨테이터 패턴**을 적용했다고 언급했습니다.
@@ -31,11 +40,8 @@ Presentational 컴포넌트는 다음과 같은 특징을 가집니다:
 - **데이터 변경 방법을 모름**: 데이터 변경은 props로 전달받은 콜백 함수를 통해서만 수행합니다.
 - **재사용성이 높음**: 다양한 Container와 함께 사용될 수 있습니다.
 
-다음은 간단한 Presentational 컴포넌트의 예시입니다:
-
 ```jsx
 // UserProfileView.jsx - Presentational 컴포넌트
-import React from 'react';
 import './UserProfile.css';
 
 const UserProfileView = ({ user, onEditClick }) => (
@@ -69,10 +75,8 @@ Container 컴포넌트는 다음과 같은 특징을 가집니다:
 - **직접적인 UI 렌더링 없음**: 대신 Presentational 컴포넌트에 데이터를 전달합니다.
 - **라이프사이클 메소드/효과 활용**: 컴포넌트 생명주기에 따른 데이터 처리를 관리합니다.
 
-다음은 Container 컴포넌트의 예시입니다:
-
 ```jsx
-import React, { Component } from 'react';
+import { Component } from 'react';
 import UserProfileView from './UserProfileView';
 
 class UserProfileContainer extends Component {
@@ -164,7 +168,35 @@ export const useUser = (userId) => {
 
 ![Hooks 다이어그램](study-react-container-presentational-pattern/hooks-diagram.webp)
 
-Hooks를 사용하면 로직을 커스텀 훅으로 추출하고, 컴포넌트 자체는 UI 표현에 집중할 수 있기 때문입니다.
+Hooks를 사용하면 로직을 커스텀 훅으로 추출하고, 컴포넌트 자체는 UI 표현에 집중할 수 있습니다.
+
+```jsx
+import { useUser } from './useUser';
+
+const UserProfile = ({ userId = 1 }) => {
+	const { user, loading, error } = useUser(userId);
+
+	if (loading) return <div>로딩 중...</div>;
+	if (error) return <div>에러 발생: {error.message}</div>;
+	if (!user) return <div>사용자를 찾을 수 없습니다</div>;
+
+	const handleEditClick = () => {
+		window.location.href = `/edit/${user.id}`;
+	};
+
+	return (
+		<div className='user-profile'>
+			<img src={user.avatar} alt={user.name} />
+			<h2>{user.name}</h2>
+			<p>이메일: {user.email}</p>
+			<p>가입일: {new Date(user.createdAt).toLocaleDateString()}</p>
+			<button onClick={handleEditClick}>프로필 수정</button>
+		</div>
+	);
+};
+
+export default UserProfile;
+```
 
 그렇다면 **Container/Presentational 패턴**은 더 이상 필요 없을까요? 그렇지 않습니다. Hooks가 많은 경우에 이 패턴을 대체할 수 있지만, 다음과 같은 상황에서는 여전히 Container/Presentational 패턴이 유용합니다:
 
@@ -174,7 +206,7 @@ Hooks를 사용하면 로직을 커스텀 훅으로 추출하고, 컴포넌트 �
 
 ## 토마토들에서 사용했던 패턴은 Container/Presentational 패턴인가?
 
-그럼 지금까지 다뤄본 내용을 바탕으로, 이전에 작성했던 토마토들 회고에서 언급한 구조가 Container/Presentational 패턴이 맞는지 살펴봅시다.
+그럼 지금까지 다뤄본 내용을 바탕으로, 이전에 작성했던 토마토들 회고에서 언급한 구조가 Container/Presentational 패턴이 맞는지 살펴보겠습니다.
 
 ### 패턴 분석
 
