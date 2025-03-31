@@ -1,5 +1,7 @@
 # hoonie-blog
 
+![opengraph-image](https://github.com/user-attachments/assets/52bbf62d-eea9-43fe-bfac-ecae5ad3013c)
+
 hoonie-blog는 Next.js와 MDX를 활용한 미니멀한 정적 블로그입니다.
 
 ## 프로젝트 소개
