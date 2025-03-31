@@ -3,6 +3,7 @@ import PostTitle from './components/post/PostTitle';
 import Link from 'next/link';
 import Image from 'next/image';
 import { highlight } from 'sugar-high';
+import { IMAGES } from '@/constants/images';
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
 	return {
@@ -20,15 +21,15 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		},
 		img: (props) => {
 			const src = props.src.includes('/')
-				? `/images/posts/${props.src}`
-				: `/images/posts/${props.src}`;
+				? `${IMAGES.POSTS_DIR}/${props.src}`
+				: `${IMAGES.POSTS_DIR}/${props.src}`;
 
 			return (
 				<Image
 					src={src}
 					alt={props.alt || ''}
-					width={600}
-					height={600}
+					width={IMAGES.DEFAULT_WIDTH}
+					height={IMAGES.DEFAULT_HEIGHT}
 					loading='lazy'
 					style={{ width: '100%', height: 'auto' }}
 				/>

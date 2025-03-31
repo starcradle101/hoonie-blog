@@ -1,7 +1,7 @@
 import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { BASE_URL } from '@/app/sitemap';
+import BASE_URL from '@/app/sitemap';
 
 interface PostPageProps {
 	params: Promise<{
