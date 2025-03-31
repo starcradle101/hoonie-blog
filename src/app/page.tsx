@@ -1,26 +1,13 @@
 import { Metadata } from 'next';
-import { GitHubIcon, MailIcon } from '@/components/ui/icons';
 import { getRecentPosts } from '@/lib/posts';
 import PostList from '@/components/post/PostList';
+import { SOCIAL_LINKS } from '@/constants/social';
 
 export const metadata: Metadata = {
 	alternates: {
 		canonical: '/',
 	},
 };
-
-const socialLinks = [
-	{
-		icon: <GitHubIcon />,
-		href: 'https://github.com/starcradle101',
-		text: 'GitHub',
-	},
-	{
-		icon: <MailIcon />,
-		href: 'mailto:dreamerdev12@gmail.com',
-		text: 'dreamerdev12@gmail.com',
-	},
-];
 
 export default async function Home() {
 	const recentPosts = await getRecentPosts();
@@ -47,7 +34,7 @@ export default async function Home() {
 			<address className='mb-16'>
 				<h2 className='mb-4 text-2xl font-semibold'>Contact</h2>
 				<ul className='space-y-3'>
-					{socialLinks.map((link, index) => (
+					{SOCIAL_LINKS.map((link, index) => (
 						<li key={index} className='flex items-center gap-3'>
 							<span className='text-gray-700 dark:text-gray-200'>
 								{link.icon}

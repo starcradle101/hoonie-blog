@@ -1,7 +1,6 @@
 'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
-
-type Theme = 'light' | 'dark';
+import { THEME, type Theme } from '@/constants/theme';
 
 type ThemeContextType = {
 	theme: Theme;
@@ -20,15 +19,14 @@ export function ThemeProvider({
 	const [theme, setTheme] = useState<Theme>(initialTheme);
 
 	useEffect(() => {
-		const maxAge = 7 * 24 * 60 * 60;
-		document.cookie = `theme=${initialTheme}; path=/; max-age=${maxAge}; SameSite=Lax`;
+		document.cookie = `${THEME.COOKIE.NAME}=${initialTheme}; max-age=${THEME.COOKIE.MAX_AGE}; ${THEME.COOKIE.OPTIONS}`;
 	}, [initialTheme]);
 
 	const toggleTheme = () => {
-		const newTheme = theme === 'light' ? 'dark' : 'light';
+		const newTheme =
+			theme === THEME.VALUES.LIGHT ? THEME.VALUES.DARK : THEME.VALUES.LIGHT;
 		setTheme(newTheme);
-		const maxAge = 7 * 24 * 60 * 60;
-		document.cookie = `theme=${newTheme}; path=/; max-age=${maxAge}; SameSite=Lax`;
+		document.cookie = `${THEME.COOKIE.NAME}=${newTheme}; max-age=${THEME.COOKIE.MAX_AGE}; ${THEME.COOKIE.OPTIONS}`;
 		document.documentElement.classList.toggle('dark');
 	};
 

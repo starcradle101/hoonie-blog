@@ -1,12 +1,10 @@
 import fs from 'fs';
-import path from 'path';
 import type { Post } from '@/types/posts';
-
-const POSTS_DIR = path.join(process.cwd(), 'src/content/posts');
+import { POSTS } from '@/constants/posts';
 
 export async function getAllPosts(): Promise<Post[]> {
 	const files = fs
-		.readdirSync(POSTS_DIR)
+		.readdirSync(POSTS.DIR)
 		.filter((file) => file.endsWith('.mdx'))
 		.map((file) => file.replace(/\.mdx$/, ''));
 
@@ -26,7 +24,9 @@ export async function getAllPosts(): Promise<Post[]> {
 	);
 }
 
-export async function getRecentPosts(limit: number = 3): Promise<Post[]> {
+export async function getRecentPosts(
+	limit: number = POSTS.RECENT_POSTS_LIMIT,
+): Promise<Post[]> {
 	const allPosts = await getAllPosts();
 	return allPosts.slice(0, limit);
 }
