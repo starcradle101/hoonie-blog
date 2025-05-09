@@ -5,14 +5,6 @@ import PostList from '@/components/post/PostList';
 import Pagination from '@/components/common/Pagination';
 import { POSTS_PER_PAGE } from '@/lib/paginationUtils';
 
-type GenerateMetadataProps = {
-	params: { page: string };
-};
-
-type BlogPageProps = {
-	params: { page: string };
-};
-
 export async function generateStaticParams() {
 	const allPosts = await getAllPosts();
 	const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
@@ -29,8 +21,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
 	params,
-}: GenerateMetadataProps): Promise<Metadata> {
-	const pageNumber = parseInt(params.page, 10);
+}: {
+	params: Promise<{ page: string }>;
+}): Promise<Metadata> {
+	const resolvedParams = await params;
+	const pageNumber = parseInt(resolvedParams.page, 10);
 
 	if (isNaN(pageNumber) || pageNumber <= 1) {
 		return {
@@ -64,8 +59,11 @@ export async function generateMetadata({
 
 export default async function BlogListPageByPageNumber({
 	params,
-}: BlogPageProps) {
-	const currentPageNumber = parseInt(params.page, 10);
+}: {
+	params: Promise<{ page: string }>;
+}) {
+	const resolvedParams = await params;
+	const currentPageNumber = parseInt(resolvedParams.page, 10);
 
 	if (isNaN(currentPageNumber) || currentPageNumber <= 1) {
 		notFound();
