@@ -30,14 +30,14 @@ export async function generateMetadata({
 		title,
 		description,
 		alternates: {
-			canonical: `/blog/${slug}`,
+			canonical: `/post/${slug}`,
 		},
 		openGraph: {
 			title,
 			description,
 			type: 'article',
 			publishedTime: date,
-			url: `${BASE_URL}/blog/${slug}`,
+			url: `${BASE_URL}/post/${slug}`,
 		},
 	};
 }
