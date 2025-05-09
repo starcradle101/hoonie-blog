@@ -1,10 +1,17 @@
-// src/app/blog/[page]/page.tsx
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getAllPosts } from '@/lib/posts';
 import PostList from '@/components/post/PostList';
 import Pagination from '@/components/common/Pagination';
 import { POSTS_PER_PAGE } from '@/lib/paginationUtils';
+
+type GenerateMetadataProps = {
+	params: { page: string };
+};
+
+type BlogPageProps = {
+	params: { page: string };
+};
 
 export async function generateStaticParams() {
 	const allPosts = await getAllPosts();
@@ -22,9 +29,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
 	params,
-}: {
-	params: { page: string };
-}): Promise<Metadata> {
+}: GenerateMetadataProps): Promise<Metadata> {
 	const pageNumber = parseInt(params.page, 10);
 
 	if (isNaN(pageNumber) || pageNumber <= 1) {
@@ -59,9 +64,7 @@ export async function generateMetadata({
 
 export default async function BlogListPageByPageNumber({
 	params,
-}: {
-	params: { page: string };
-}) {
+}: BlogPageProps) {
 	const currentPageNumber = parseInt(params.page, 10);
 
 	if (isNaN(currentPageNumber) || currentPageNumber <= 1) {
