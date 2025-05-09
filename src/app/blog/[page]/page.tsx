@@ -25,8 +25,7 @@ export async function generateMetadata({
 }: {
 	params: { page: string };
 }): Promise<Metadata> {
-	const awaitedParams = await params;
-	const pageNumber = parseInt(awaitedParams.page, 10);
+	const pageNumber = parseInt(params.page, 10);
 
 	if (isNaN(pageNumber) || pageNumber <= 1) {
 		return {
@@ -35,7 +34,7 @@ export async function generateMetadata({
 		};
 	}
 
-	const allPosts = await getAllPosts(); // totalPages를 다시 계산해야 함
+	const allPosts = await getAllPosts();
 	const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
 
 	if (pageNumber > totalPages) {
@@ -63,8 +62,7 @@ export default async function BlogListPageByPageNumber({
 }: {
 	params: { page: string };
 }) {
-	const awaitedParams = await params;
-	const currentPageNumber = parseInt(awaitedParams.page, 10);
+	const currentPageNumber = parseInt(params.page, 10);
 
 	if (isNaN(currentPageNumber) || currentPageNumber <= 1) {
 		notFound();
